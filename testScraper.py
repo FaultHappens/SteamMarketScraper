@@ -8,7 +8,7 @@ from logic.SteamAuthorisation import steamAuthorisation
 from logic.work import work
 import time 
 
-driver = webdriver.Chrome(executable_path="C:\\testScraper\\chromedriver.exe")
+driver = webdriver.Chrome(executable_path="C:\\SteamMarketScraper\\chromedriver.exe")
 
 steamAuthorisation(driver)
 
