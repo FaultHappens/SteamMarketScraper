@@ -11,15 +11,19 @@ import time
 
 items: List[ItemInfo] = list()
 alreadyChecked = []
-maxPages = 3
+maxPages = 1
 
 
 def work(driver:webdriver, baseUrl:str, maxFloat: float):
     print("\n\n")
+    mustReturn = False
 
     driver.get(baseUrl)
-    nextPageBtn = driver.find_element(By.ID, "searchResults_btn_next")
-
+    try:
+        nextPageBtn = driver.find_element(By.ID, "searchResults_btn_next")
+    except:
+        print("An exception occurred")
+        return 
     for page in range(maxPages):
         print(f"Page #{page+1}:\n")
         nextPageBtn = driver.find_element(By.ID, "searchResults_btn_next")
@@ -30,9 +34,9 @@ def work(driver:webdriver, baseUrl:str, maxFloat: float):
             inspectLink = popup.get_attribute('href')
             if inspectLink not in alreadyChecked:
                 checkFloat(inspectLink, maxFloat, driver)
-                
-        nextPageBtn.click()
-        waitUntillNextPageLoads(page+2, driver)
+        if(page+1 != maxPages):
+            nextPageBtn.click()
+            waitUntillNextPageLoads(page+2, driver)
 
 
 
@@ -54,8 +58,8 @@ def checkFloat(inspectLink: str, maxFloat: float, driver: webdriver):
         print(a)
         with open('result.txt', 'a') as f:
             f.write(a)
-        while True:
-            time.sleep(1)
+        mustReturn = True
+
 
 
 def waitUntillNextPageLoads(expectedPage: int, driver: webdriver):
@@ -82,6 +86,6 @@ def buyItem(m: str, a:str, driver: webdriver):
     if buyBttn.text != "Add Funds":
         driver.find_element(By.XPATH, "//input[@type='checkbox'][@id='market_buynow_dialog_accept_ssa']").click()
         buyBttn.click()
-        while True:
-            time.sleep(1)
+        time.sleep(1)
+        driver.find_element(By.XPATH, "//div[@class='newmodal_close with_label']")
     
